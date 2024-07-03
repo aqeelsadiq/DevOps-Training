@@ -1,0 +1,53 @@
+QEUSTION: 1 Given these requirements
+Base address: 142.150.235.0
+Network mask: 255.255.255.224
+Broadcast address: 142.150.235.31
+Reserved Router address: 142.150.235.1
+a) What is the address of the assigned subnetwork and what is the extended network prefix?
+b) Which IP addresses can I use to configure the computers in my lab?
+c) Suppose I wanted to do subdivide the assigned address block into 4 smaller subnetworks of equal size. How large are these networks, and how many IP addresses can I assign in each subnetwork?
+
+
+Answer a) 
+Base address: 142.150.235.0 (in binary 10001110.10010110.11101011.00000000)
+Subnet mask: 255.255.255.224 (in binary  11111111.11111111.11111111.11100000)
+
+we will perform AND operation between base address and subnet mask
+
+10001110.10010110.11101011.00000000
+1111111.11111111.11111111.11100000
+result
+10001110.10010110.11101011.00000000
+so, the result is same as base adddress
+The subnetwork address is the same as the base address: 142.150.235.0
+
+extended network prefix is /27.   27 represents the 27 one in subnet mask.
+
+Answer b)
+With a /27 network, the total number of IP addresses is 2^32-27=5  2^5=32 addresses.
+the first address is the network address (142.150.235.0) and the last address is the broadcast address (142.150.235.31).
+Reserved Router address: 142.150.235.1
+The usable IP addresses range from 142.150.235.2 to 142.150.235.30.
+
+
+Answer c)
+To subdivide a /27 network into 4 equal size. we need to move the subnet mask 2 bits to the right, and the result is  /29 prefix. This is because each subdivision increases the number of subnets by 2^n, where n is the number of bits we move. Here, we need 2^2=4 subnets.
+
+2^32-29=2^3=8 addresses on each subnet.
+Subnet 1)
+Network address: 142.150.235.0
+Usable IP addresses: 142.150.235.1 to 142.150.235.6
+Broadcast address: 142.150.235.7
+subnet 2)
+Netwrok address: 142.150.235.8
+Usable IP addresses: 142.150.235.9 to 142.150.235.14
+Broadcast address: 142.150.235.15
+Subnet 3)
+Netwrok address: 142.150.235.16
+Usable IP addresses: 142.150.235.17 to 142.150.235.22
+Broadcast address: 142.150.235.23
+Subnet 4)
+Netwrok address: 142.150.235.24
+Usable IP addresses: 142.150.235.25 to 142.150.235.30
+Broadcast address: 142.150.235.31
+so, we can use 6 IP address on each subnet and first and last is reserved for network and broadcast.
