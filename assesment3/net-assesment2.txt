@@ -30,7 +30,7 @@ Network address: 201.35.2.0
 Broadcast address: 201.35.2.63
 
 201.35.2.64 to 201.35.2.127
-network address: 201.35.2.62
+network address: 201.35.2.64
 Broadcast address: 201.35.22.127
 
 subnet  3: 201.35.2.128/26
