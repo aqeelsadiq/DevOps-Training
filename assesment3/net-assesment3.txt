@@ -1,0 +1,65 @@
+QUESTION 4 : An organization is assigned a class C network address of 201.35.2.0 It uses a netmask of 255.255.255.192 to divide this into sub-networks. Which of the following is/are valid host IP addresses?
+A) 201.35.2.129
+B) 201.35.2.191
+C) 201.35.2.255
+Both (A) and (C)
+
+ANSWER) A 
+reason: so, According to this ip we divided the network into four subnetworks. there are 4 subnets and their ranges are given below
+
+Subnet 1: 201.35.2.0/26
+
+201.35.2.0 - 201.35.2.63
+
+subnet 2:
+201.35.2.64 to 201.35.2.127
+
+subnet  3: 201.35.2.128/26
+
+201.35.2.128 to 201.35.2.191
+
+subnet 4: 201.35.2.192
+
+201.35.2.192 to 201.35.2.255  
+so, according to these raanges option A is correct because option B and C are the broadcast address of subnet 3 and 4 respectively.
+
+
+QUESTION 5: An organization has a class C network address of 201.32.64.0. It uses a subnet mask of 255.255.255.248. Which of the following is NOT a valid broadcast address for any subnetworks?
+a) 201.32.64.135
+b) 201.32.64.240
+c) 201.32.64.207
+d) 201.32.64.231
+
+ANSWER) B
+reason: The default subnet mask of class C is 255.255.255.0 here subnet mask is 255.255.255.248 if we convert this into binary
+we can write as 11111111.11111111.11111111.11111000  here 29 bits are reserved for network and 3 bits for host.
+2^3=8 not of ip addresses. 6 ip addresses are useful in each subnet.
+number of subnets = 2^no.of subnets bits = 2^5=32 (difference between the 29 and 24 is 5)
+so according to the network address and subnet mask we can create 32 subnets.
+
+ answer B is correct because B is the host address of subnet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
