@@ -1,0 +1,53 @@
+QUESTION 2: Consider the 128.100.112.0/21 block of IP addresses. This block of addresses must be divided into four subnetworks that have each at least 500 IP addresses.
+
+ANSWER: First, we find the number of IP addresses in each subnetwork.
+formula to calculate the number of IP addresses on each subnet. (2^32-subnet mask) = 2^32-21=2^11=2048)
+So the total number of IP addresses is 2048, and we divide it into 4 subnets, Dividing this block into /23 subnets so each subnet will have 512 IP addresses. more clear to understand that here 23 bit is reserved for network and 9 bits reserved for host so 2^9=512.
+
+Subnet 1: 128.100.112.0/23   (128.100.112.0 to 128.100.112.255) (128.100.113.0 to 128.100.113.255)
+subnet 2: 128.100.114.0/23   (128.100.114.0 to 128.100.114.255) (128.100.115.0 to 128.100.115.255)
+subnet 3: 128.100.116.0/23
+subnet 4: 128.100.118.0/23
+
+
+
+QUESTION 3: An organization is assigned a class C network address of 201.35.2.0. It uses a netmask of 255.255.255.192. Using this netmask
+a) How many subnets can be created. What are the address of the assigned subnetworks?
+b) In each subnet, how many IPs each subnet will have
+
+ANSWER:  default subnet mask of class C 255.255.255.0 but here netmask is 255.255.255.192 it means /26 is CIDR notation. 26 bits for network and 6 bit for host part.
+
+a) The formula to calculate the number of subnets is:
+
+number of subnets = 2^no.of subnet bits
+Here, the number of subnet bits is 2 (since the difference between 26 and 24 is 2).
+no.of subnets = 2^2 = 4
+
+Subnet 1: 201.35.2.0/26
+
+201.35.2.0 - 201.35.2.63
+Network address: 201.35.2.0
+Broadcast address: 201.35.2.63
+
+201.35.2.64 to 201.35.2.127
+network address: 201.35.2.62
+Broadcast address: 201.35.22.127
+
+subnet  3: 201.35.2.128/26
+
+201.35.2.128 to 201.35.2.191
+
+network address: 201.35.2.128
+broadcast address: 201.35.2.191
+
+subnet 4: 201.35.2.192
+
+201.35.2.192 to 201.35.2.255
+network address: 201.35.2.192
+broadcast address: 201.35.2.255
+
+b) Number of usable IP addresses are below
+/26 2^6=64 total 64 no.of addresses on each subnet.
+so 2^2-2=2^6-2=64-2=62 so 62 address are useful in each subnet.
+
+
