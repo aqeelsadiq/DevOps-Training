@@ -1,0 +1,20 @@
+sudo apt update
+sudo apt install apache2 -y
+sudo systemctl enable apache2
+sudo apt install php php-mysqli -y
+sudo apt-get install wget unzip -y
+sudo wget https://wordpress.org/latest.zip
+sudo unzip latest.zip
+sudo cp -r wordpress/* /var/www/html/
+cd /var/www/html
+sudo chown www-data:www-data -R /var/www/html/
+sudo rm -rf index.html
+sudo cp wp-config-sample.php wp-config.php
+sudo nano wp-config.php  # write the DB name, username and password according to your database.
+sudo apt install mysql-server
+sudo mysql # go to to mysql server and create db user and set password by these below commands
+CREATE DATABASE wordpress;
+CREATE USER wordpress@localhost IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
+\q
+# now run the ip address and see it is working or not. 

@@ -1,0 +1,71 @@
+#!/bin/bash
+userdata:
+sudo apt update -y
+sudo apt install mysql-server -y
+sudo mysql -h localhost -u root <<EOF
+CREATE DATABASE mydb;
+CREATE USER 'aqeel'@'%' IDENTIFIED BY 'aqeel123';
+GRANT ALL PRIVILEGES ON *.* TO 'aqeel'@'%';
+FLUSH PRIVILEGES;
+exit
+EOF
+sudo apt install apache2 -y
+sudo systemctl enable apache2
+sudo apt install php php-mysqli -y
+sudo apt-get install wget unzip -y
+sudo wget https://wordpress.org/latest.zip
+sudo unzip latest.zip
+sudo cp -r wordpress/* /var/www/html/
+cd /var/www/html
+sudo chown www-data:www-data -R /var/www/html/
+sudo rm -rf index.html
+sudo cp wp-config-sample.php wp-config.php
+sudo vim wp-config.php
+sudo sed -i "s/^.*DB_NAME.*$/define('DB_NAME', 'mydb${id}');/" wp-config.php
+sudo sed -i "s/^.*DB_USER.*$/define('DB_USER', 'aqeel${id}');/" wp-config.php
+sudo sed -i "s/^.*DB_PASSWORD.*$/define('DB_PASSWORD', 'aqeel123${id}');/" wp-config.php
+cd ../../../
+sudo apt restart apache2
+
+
+
+
+
+FOR MYSQL:
+
+#!/bin/bash
+apt update
+apt install mysql-server -y
+systemctl start mysql
+systemctl enable mysql
+mysql -u root --password= -e "\
+CREATE DATABASE mydb; \
+CREATE USER 'aqeel'@'%' IDENTIFIED BY 'aqeel@123'; \
+GRANT ALL PRIVILEGES ON *.* TO 'aqeel'@'%'; \
+FLUSH PRIVILEGES;"
+sed -i 's/^bind-address/#bind-address/g' /etc/mysql/mysql.conf.d/mysqld.cnf
+systemctl restart mysql
+
+FOR WORDPRESS:
+
+#!/bin/bash
+apt update -y 
+apt install apache2 -y
+apt install php libapache2-mod-php php-mysql -y
+a2enmod rewrite
+systemctl restart apache2
+cd /tmp
+curl -LO https://wordpress.org/latest.tar.gz
+tar xzvf latest.tar.gz
+mv /tmp/wordpress/* /var/www/html/
+chown -R www-data:www-data /var/www/html/
+chmod -R 755 /var/www/html/
+cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+sed -i 's/database_name_here/mydb/g' /var/www/html/wp-config.php
+sed -i 's/username_here/aqeel/g' /var/www/html/wp-config.php
+sed -i 's/password_here/aqeel@123/g' /var/www/html/wp-config.php
+sed -i 's/localhost/write-private-ip-here/g' /var/www/html/wp-config.php
+rm /var/www/html/index.html
+
+
+
