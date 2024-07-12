@@ -1,0 +1,7 @@
+how to create docker image from running container (docker commit)
+
+
+# To create image from runnig container using commit command 
+1- docker container commit --author "Aqeel" -m "this is image from cont" <image_name>
+
+# you can create image from container and use that image to up the new container

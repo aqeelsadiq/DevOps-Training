@@ -1,0 +1,14 @@
+Docker port mapping , rename container, restart container, exec container
+
+# port mapping is used to access same container on different machine
+1- docker container run -d -p <machine-port:cont-port> --name test-cont nginx
+
+# if you want to go inside of any container
+2- docker container exec -it <cont_id> /bin/bash
+
+# to rename the container
+3- docker container rename <cont-id> <new-name>
+
+# to restart the container
+4- docker container restart <cont-id>
+

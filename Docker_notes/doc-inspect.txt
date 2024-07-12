@@ -1,0 +1,14 @@
+Docker container inspect
+
+# run the nginx container
+1- docker container run -d nginx
+
+# use docker inspect command that will show all the information about container state of container, ip address, image
+#etc
+2- docker inspect <cont_id>
+
+# to check the process running inside container
+3- docker container top <container_id>
+
+# if multiple container running in your dokcer engine how can you check about stat of each container.
+4- docker container stats

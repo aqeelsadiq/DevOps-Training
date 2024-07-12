@@ -1,0 +1,23 @@
+Attach to unning container , Kill, wait, pause, unpause, prune, port
+
+# Attach to a running container
+1- docker container attach <cont_id>
+
+# kill
+2- docker container kill <cont_id>
+
+# wait
+3- docker container wait <cont_id>
+
+# pause
+4- docker container pause <cont_id>
+
+# unpause
+5- docker container unpause <cont_id>
+
+# prune is used to delete all the container that is not in used.
+6- docker container prune
+
+# port you can use port to to check specfic container port mapping
+7- docker container port <cont_id>
+

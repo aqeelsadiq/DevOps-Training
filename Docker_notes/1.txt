@@ -1,0 +1,26 @@
+Create container in background. stop, start, detach container.
+
+# to start a container
+1- docker container run -d ubuntu 
+
+# to start a container and go inside
+2- docker container run -d -it ubuntu /bin/bash
+
+# if you exit from container and your all the processes or software download in that container keep safe
+3- ctrl + p + q 
+
+# to stop a container
+4- docker stop <container_name> or <container_id>
+
+# to start a container 
+5- docker start <container_name> or <container_id>
+
+#  to remove a container 
+6- docker rm <container_name> or <container_id>
+
+# to show the all containers id
+7- docker container ls -aq
+
+# to remove all containers at the same time 
+8- docker container rm $[docker container ls -aq]
+

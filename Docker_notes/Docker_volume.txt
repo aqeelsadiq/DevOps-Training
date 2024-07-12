@@ -1,0 +1,20 @@
+Docker Volume
+
+# in the container data is not persistent if you remove container your data will remove automatically
+# so in this case volume concept is very useful.
+1- docker volume create <volume_name>
+
+# to show volume
+2- docker volume ls
+
+# to attach volume to new container
+3- docker run -itd --name <cont_name> -v <volume-id>:/var/lib/mysql mysql
+
+# to create volume at run time
+4- docker run -itd --name <cont_name> -v <vol_name>:/var/lib/mysql 
+
+# to remove volume
+5- docker volume rm <volume_name>
+
+# all unused volume will delete
+6- docker volume prune  

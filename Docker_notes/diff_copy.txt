@@ -1,0 +1,19 @@
+create docker container, diff docker container and copy file into container
+
+
+# use create command to up the container instead of run command by using create command only container will be create not in running state
+1- docker container create <image_name> 
+
+# To start the container
+2- docker container start <cont_id>
+
+# Docker diff command is used to check the what changes occurs in configuration files
+3- docker container diff <cont_id>
+
+# copy file into container copy the file from local machine to container
+4- docker container cp <file_name> <cont_id:cont_path>
+
+# attach command is used to go inside the containner
+5- docker conatainer attach <cont_id>
+
+ 

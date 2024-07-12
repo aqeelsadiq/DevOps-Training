@@ -1,0 +1,13 @@
+How to push image on docker hub, image tag, image pull, docker login
+
+# To pull the image
+1- docker pull <image_name>:tag
+
+# To push the image to  hub.docker first give the tag to your image
+2- docker image tag <image_name> <user_name_of_dockerhub_acount/image_name>
+
+# Now you can push your docker image to docker hub
+# before pushing the docker image to docker hub use the command docker login
+3- docker login 
+4- docker push <user_name_of_dockerhub_acount/image_name> 
+

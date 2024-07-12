@@ -1,0 +1,21 @@
+Layered Architecture and Dockerfiles
+
+# naming convention "Dockerfile" How to write dockerfile?
+1- docker image build -t <image_name> .
+
+FROM to pull image
+RUN to run command
+EXPOSE to open  port
+COPY to copy files and directories from host to image
+ENV to set environment variables
+CMD to specifies a command is run when a conntainer is run from image.
+ENTRYPOINT to specifies a command is run when a conntainer is run from image but additional argument to be passed in.
+ADD copy file from host to image download zip files from given link and extract it.
+ARG  define variable that passed to container while building image.
+VOLUME create volume.
+WORKDIR to set working directory.
+MAINTAINER to set email and name of another user.
+LABEL to add metadata
+USER to set user
+SHELL specifies shell to be used to run command.
+

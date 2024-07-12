@@ -1,0 +1,14 @@
+Export/Import docker container
+
+# export and import concept is basically we can use the container on different machine 
+# we can create the tar file of our container and use the same container on different machine.
+1- docker container export <cont_id> > my_ubuntu.tar
+2- docker container export <cont_id> -o my_ubuntu.tar
+
+# You can share tar file with other teammate and he will import the tar file
+# tar file will import as an image 
+# by importing only image will create from tar file and you can run this image to up the container.
+3- docker image import <tar-file_name> <image_name>
+
+# To run a container from import image
+4- docker container run -it <image_name> /bin/bash

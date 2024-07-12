@@ -1,0 +1,4 @@
+BIND MOUNT
+
+# You can mount the file or folder of host machine to container
+
