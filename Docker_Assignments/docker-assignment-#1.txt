@@ -1,0 +1,39 @@
+Docker Assignment #1 
+
+1-  first cotainer
+docker run -it ubuntu
+
+2- Understanding of Basic commands
+# show all running containers
+docker ps 
+
+# show all containers including stopped
+docker ps -a
+
+# show all images
+docker images / docker image ls
+
+# show all the information about docker container detailed information
+docker inspect <cont_id>
+
+# shows information logged by a running container. The docker service logs command shows information logged by all containers participating in a service.
+docker logs <cont_id>
+
+
+3- Bring up mongodb contanier and  set the environment variables
+ docker pull mongo:latest
+ docker run -it -d --name my-container -p <host_port:cont_port> -e MONGO_INITDB_ROOT_USERNAME=aqeel \
+  -e MONGO_INITDB_ROOT_PASSWORD=aqeel123 <image_name>
+  
+# to go inside the container 
+docker exec -it <cont_id> bash
+  
+# use mongosh to access the database
+mongsh -u <username> -p 
+  
+4- Bringup the nginx container and mount your own directories with container and make it available on port 80
+docker pull nginx:latest
+docker run -it -d --name my-nginx -p 80:80 -v /home/ubuntu/file name:/usr/share/nginx/html <image_name>
+  
+  
+ 
