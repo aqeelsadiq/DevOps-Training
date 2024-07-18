@@ -1,0 +1,97 @@
+DOCKER ASSIGNMENT #2	
+
+• Writing your first Dockerfile.
+  Create a dockerfile from alpine base image and install and configure awscli. The proposal for this container is to run awscli commands, after that it should die. You must provide the awscli command via entrypoint.
+  
+  
+  # Use Alpine Linux as the base image
+FROM alpine:latest
+
+# Install the AWS CLI using the Alpine package manager (apk)
+RUN apk --no-cache add aws-cli
+
+# Set the default AWS region (replace 'us-east-1' with your desired region)
+RUN aws configure set region us-east-1
+
+# Create a non-root user to run the AWS CLI
+RUN adduser -D aqeel
+
+# Set the user as the default user for subsequent commands
+USER aqeel
+
+# Set the entrypoint to the AWS CLI command passed as arguments
+ENTRYPOINT ["aws"]
+
+# After creating dockerfile and build image run below command
+docker run -it -d -e AWS_ACCESS_KEY_ID=YOUR_KEY -e AWS_SECRET_ACCESS_KEY=YOUR_KEY awscli s3 ls
+  
+• Docker registry
+Tag and push the docker image that you built to DockerHub. Don't forget to docker login first.
+
+# pushing your docker image from local to docker hub.
+docker tag <real_image> <dockerhub_username/imagename>
+docker login
+# push the image on docker hub.
+docker push <dockerhub_username/imagename>
+
+
+• Docker in docker.
+Here we want you to know the docker inception capabilities, so please take a look at this page: 
+https://github.com/jpetazzo/dind
+After you have your first docker blow mind, you can go and test that images to play with docker in docker.
+
+#pull docker image from dokcerhub
+docker pull docker:19.03.12-dind
+
+#Start the DinD container with the --privileged flag to enable Docker-in-Docker functionality.
+docker run --privileged -d --name dind-container docker:19.03.12-dind
+
+#Attach to the running dind container
+docker exec -it dind-container /bin/sh
+
+#Pull and run an Nginx container inside the DinD container
+docker pull nginx
+docker run -d -p 8080:80 nginx
+
+
+• Sharing the docker daemon
+Now that you know the inception of docker we are going to learn, how to share your host daemon to create more dockers, instead of doing docker in docker. So the task here is to create  a dockerfile, from alpine image base, and install the docker in it, but what we want is that when you execute the docker run command, you share the docker daemon with -v option, so after that you can start creating more containers from this containers.
+
+# Start from the Alpine base image
+FROM alpine:latest
+
+# Install Docker
+RUN apk update && apk add --no-cache docker
+
+# Create a Docker entrypoint script
+RUN echo '#!/bin/sh' > /usr/local/bin/docker-entrypoint.sh && \
+    echo 'dockerd &' >> /usr/local/bin/docker-entrypoint.sh && \
+    echo 'exec "$@"' >> /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh
+    
+# Set the entrypoint to the script
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+# Start a shell by default
+CMD ["sh"]
+
+
+docker build -t docker-in-docker:alpine .
+
+
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock docker-in-docker:alpine
+
+# inside docker container run the following command to check docker is runnig or not
+
+docker pull nginx:latest
+
+docker run -it -d -p 80:80 nginx
+
+
+
+
+  
+  
+  
+  
+        
