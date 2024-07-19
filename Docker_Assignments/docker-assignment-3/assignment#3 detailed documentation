@@ -1,0 +1,55 @@
+DOCKER ASSIGNMENT #3
+
+    • Writing your first docker compose file
+        ◦ Before to deep dive in the orchestators tools, we are going to start here with the most basic, yes docker-compose , you will need to do the following.
+            ▪ Create a dockerfile that will have python installed on it (from python base image),  and install the flask framework.
+            ▪ Create an redis image (from redis base image) that will serve as the database of the python app.
+            ▪ Create an nginx dockerfile (from nginx base image) that will be useful for serve all your static files.
+            ▪ Create an nginx dockerfile (from nginx base image)  that will work as your proxy server.
+
+With all of this setup, what you need to do is the following.
+The application logic, can be whatever you like, make it simple :)
+These are few requirements. 
+    • The python app will need to talk with the redis database. 
+    • The static content needs to be set on an nginx container.
+    • There should be a nginx container different from the above one, that will serve all the static files.
+All of this configuration, needs to be automated with docker-compose files.
+
+simple flask application deploy and connect with redis database. purpose of this assignment is to write a more then one dockerfile
+and write a compose file to deploy and run all containers at a  time instead of run one by one. 
+
+THIS DOCUMENT WILL TELL ABOUT THE COMMANDS AND SCENARIO OF WORK
+
+# to build and run containers from docker compose file
+1- docker compose up --build -d  
+
+# to check the images
+2- docker images
+
+# to check the containers
+3- docker ps && docker ps -a
+
+# If all the images and containers are in running state you can check you can test the application by using 
+ip address and port. 
+
+
+# go inside the python_app container
+4-docker exec -it cont_id /bin/bash
+
+/app directorty and check the database connection
+python <file_name>.py
+exit
+
+# go inside the redis container
+docker exec -it <redis_container_name> redis-cli
+
+# inside database set key and display
+SET mykey "Hello, Redis!"
+GET mykey
+
+INFO
+
+# go inside the nginx_proxy 
+docker-compose exec nginx_proxy nginx -t
+
+
