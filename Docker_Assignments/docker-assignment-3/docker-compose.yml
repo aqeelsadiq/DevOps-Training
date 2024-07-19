@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  python_app:
+    build: ./python_app
+    ports:
+      - "5000:5000"    
+    volumes:
+      - ./python_app:/app
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    networks:
+      - backend
+
+  nginx_static:
+    build: ./nginx_static
+    networks:
+      - frontend
+
+  nginx_proxy:
+    build: ./nginx_proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - python_app
+      - nginx_static
+    networks:
+      - frontend
+      - backend
+
+networks:
+  frontend:
+  backend:
