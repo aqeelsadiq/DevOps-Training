@@ -1,0 +1,141 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "This is ec2 stack and we will run the wordpress application in it"
+
+Parameters:
+  VpcId:
+    Description: " vpc id"
+    Type: String
+  PublicSubnet1Id:
+    Description: "public subnet 1 id"
+    Type: String
+  PublicSubnet2Id:
+    Description: "public subnet 2 id"
+    Type: String
+  EC2KeyName:
+    Description: Name of the EC2 Key Pair
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: 'mykey'
+  EC2ImageId:
+    Description: ID of the Amazon Machine Image (AMI)
+    Type: AWS::EC2::Image::Id
+    Default: ami-0ff591da048329e00
+  EC2InstanceType:
+    Description: Type of EC2 Instance
+    Type: String
+    Default: t2.micro
+  DBEndpoint:
+    Type: String
+  DatabaseName:
+    Type: String
+  DatabaseUser:
+    Type: String
+  DatabasePassword:
+    Type: String
+
+
+Resources:
+  MySecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Security group for SSH and HTTP
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: TCP
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0" # Allow SSH from your specific IP
+        - IpProtocol: TCP
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0" # Allow HTTP from any IP
+      Tags:
+        - Key: Name
+          Value: webSecurityGroup-aq
+  EC2Instance1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref EC2ImageId
+      InstanceType: !Ref EC2InstanceType
+      KeyName: !Ref EC2KeyName
+      SubnetId: !Ref PublicSubnet1Id
+      SecurityGroupIds: 
+        - !Ref MySecurityGroup
+      Tags:
+        - Key: Name
+          Value: wp-server-1-aq
+      UserData:
+        Fn::Base64: !Sub | 
+          #!/bin/bash
+          set -x
+          sudo apt-get update -y
+          sudo apt-get upgrade -y
+          sudo apt-get install apache2 -y
+          sudo systemctl status apache2 -y
+          sudo systemctl start apache2
+          sudo systemctl enable apache2
+          sudo apt-get install php php-mysql php-gd php-cli php-common -y
+          sudo apt-get install wget unzip -y
+          sudo wget https://wordpress.org/latest.zip
+          sudo unzip latest.zip
+          sudo cp -r wordpress/* /var/www/html/
+          cd /var/www/html
+          sudo chown www-data:www-data -R /var/www/html/
+          sudo rm -rf index.html
+          sudo cp wp-config-sample.php wp-config.php
+          sudo sed -i "s/database_name_here/${DatabaseName}/g" wp-config.php
+          sudo sed -i "s/username_here/${DatabaseUser}/g" wp-config.php
+          sudo sed -i "s/password_here/${DatabasePassword}/g" wp-config.php
+          sudo sed -i "s/localhost/${DBEndpoint}/g" wp-config.php  
+          sudo systemctl restart apache2
+  EC2Instance2:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: !Ref EC2ImageId
+      InstanceType: !Ref EC2InstanceType
+      KeyName: !Ref EC2KeyName
+      SubnetId: !Ref PublicSubnet2Id
+      SecurityGroupIds: 
+        - !Ref MySecurityGroup
+      Tags:
+        - Key: Name
+          Value: wp-server-2-aq
+      UserData:
+        Fn::Base64: !Sub | 
+          #!/bin/bash
+          set -x
+          sudo apt-get update -y
+          sudo apt-get upgrade -y
+          sudo apt-get install apache2 -y
+          sudo systemctl status apache2 -y
+          sudo systemctl start apache2
+          sudo systemctl enable apache2
+          sudo apt-get install php php-mysql php-gd php-cli php-common -y
+          sudo apt-get install wget unzip -y
+          sudo wget https://wordpress.org/latest.zip
+          sudo unzip latest.zip
+          sudo cp -r wordpress/* /var/www/html/
+          cd /var/www/html
+          sudo chown www-data:www-data -R /var/www/html/
+          sudo rm -rf index.html
+          sudo cp wp-config-sample.php wp-config.php
+          sudo sed -i "s/database_name_here/${DatabaseName}/g" wp-config.php
+          sudo sed -i "s/username_here/${DatabaseUser}/g" wp-config.php
+          sudo sed -i "s/password_here/${DatabasePassword}/g" wp-config.php
+          sudo sed -i "s/localhost/${DBEndpoint}/g" wp-config.php  
+          sudo systemctl restart apache2
+
+
+
+Outputs:
+  EC2Instance1Id:
+    Description: "Ec2instance1 id"
+    Value: !Ref EC2Instance1
+  EC2Instance2Id:
+    Description: "Ec2instance2 id"
+    Value: !Ref EC2Instance2
+  MySecurityGroupId:
+    Description: "MySecurityGroupId"
+    Value: !Ref MySecurityGroup
+
+
+

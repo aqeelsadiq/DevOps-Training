@@ -69,3 +69,25 @@ rm /var/www/html/index.html
 
 
 
+
+#!/bin/bash
+sudo apt update -y 
+sudo apt install apache2 -y
+sudo apt install php libapache2-mod-php php-mysql -y
+a2enmod rewrite
+sudo systemctl restart apache2
+cd /tmp
+curl -LO https://wordpress.org/latest.tar.gz
+tar xzvf latest.tar.gz
+mv /tmp/wordpress/* /var/www/html/
+chown -R www-data:www-data /var/www/html/
+chmod -R 755 /var/www/html/
+cp /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+RDS_ENDPOINT=$(aws rds describe-db-instances --query "DBInstances[?DBInstanceIdentifier=='mydatabase'].Endpoint.Address" --output text)
+sed -i 's/database_name_here/mydb/g' /var/www/html/wp-config.php
+sed -i 's/username_here/aqeel/g' /var/www/html/wp-config.php
+sed -i 's/password_here/aqeel@123/g' /var/www/html/wp-config.php
+sed -i 's/localhost/$RDS_ENDPOINT/g' /var/www/html/wp-config.php
+rm /var/www/html/index.html
+
+

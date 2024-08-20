@@ -1,0 +1,176 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Stack to create an Application Load Balancer (ALB), Launch Template, and Auto Scaling Group
+
+Parameters:
+  VpcId:
+    Type: String
+  PublicSubnet1Id:
+    Type: String
+  PublicSubnet2Id:
+    Type: String
+  DBEndpoint:
+    Type: String
+  DatabaseName:
+    Type: String
+  DatabaseUser:
+    Type: String
+  DatabasePassword:
+    Type: String
+  EC2Instance1Id:
+    Type: String
+  EC2Instance2Id:
+    Type: String
+  MySecurityGroupId:
+    Type: String
+
+Resources:
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for ALB
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: alb-sg-aq
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: my-load-balancer
+      Subnets:
+        - !Ref PublicSubnet1Id
+        - !Ref PublicSubnet2Id
+      SecurityGroups:
+        - !Ref LoadBalancerSecurityGroup
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '300'
+      Type: application
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Name: my-target-group
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VpcId
+      TargetType: instance
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: traffic-port
+      HealthCheckPath: /wp-admin/install.php
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 4
+      UnhealthyThresholdCount: 3
+      Matcher:
+        HttpCode: '200'
+      Tags:
+        - Key: Name
+          Value: demo-tg1
+      Targets:
+        - Id: !Ref EC2Instance1Id
+          Port: 80
+        - Id: !Ref EC2Instance2Id
+          Port: 80
+
+  ALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+  
+  
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: my-launch-template
+      LaunchTemplateData:
+        InstanceType: t2.micro
+        ImageId: ami-0ff591da048329e00 
+        SecurityGroupIds:
+          - !Ref MySecurityGroupId
+        UserData:
+          Fn::Base64: !Sub | 
+            #!/bin/bash
+            set -x
+            sudo apt-get update -y
+            sudo apt-get upgrade -y
+            sudo apt-get install apache2 -y
+            sudo systemctl status apache2 -y
+            sudo systemctl start apache2
+            sudo systemctl enable apache2
+            sudo apt-get install php php-mysql php-gd php-cli php-common -y
+            sudo apt-get install wget unzip -y
+            sudo wget https://wordpress.org/latest.zip
+            sudo unzip latest.zip
+            sudo cp -r wordpress/* /var/www/html/
+            cd /var/www/html
+            sudo chown www-data:www-data -R /var/www/html/
+            sudo rm -rf index.html
+            sudo cp wp-config-sample.php wp-config.php
+            sudo sed -i "s/database_name_here/${DatabaseName}/g" wp-config.php
+            sudo sed -i "s/username_here/${DatabaseUser}/g" wp-config.php
+            sudo sed -i "s/password_here/${DatabasePassword}/g" wp-config.php
+            sudo sed -i "s/localhost/${DBEndpoint}/g" wp-config.php  
+            sudo systemctl restart apache2
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      MinSize: '1'
+      MaxSize: '3'
+      DesiredCapacity: '2'
+      VPCZoneIdentifier:
+        - !Ref PublicSubnet1Id
+        - !Ref PublicSubnet2Id
+      TargetGroupARNs:
+        - !Ref TargetGroup
+      Tags:
+        - Key: Name
+          Value: my-auto-scaling-instance-aq
+          PropagateAtLaunch: true
+      HealthCheckType: ELB
+      HealthCheckGracePeriod: 300
+
+  WebServerScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      Cooldown: 400
+      ScalingAdjustment: 1
+
+
+  WebServerScaleDownPolicy:
+    Type: 'AWS::AutoScaling::ScalingPolicy'
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName: !Ref AutoScalingGroup
+      Cooldown: 400
+      ScalingAdjustment: -1
+
+
+
+  # AutoScalingPolicy:
+  #   Type: AWS::AutoScaling::ScalingPolicy
+  #   Properties:
+  #     AutoScalingGroupName: !Ref AutoScalingGroup
+  #     PolicyType: TargetTrackingScaling
+  #     ScalingTarget:
+  #       TargetValue: 70
+  #       PredefinedMetricSpecification:
+  #         PredefinedMetricType: ASGAverageCPUUtilization

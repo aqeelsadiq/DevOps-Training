@@ -1,0 +1,19 @@
+#Validate template command
+1- aws cloudformation validate-template --template-body file:///home/local/test/sampletemplate.json
+
+# Describe and list your stack 
+2- aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE
+
+# create stack command
+3- aws cloudformation create-stack --stack-name myteststack \
+  --template-body file:///home/testuser/mytemplate.json \
+  --parameters ParameterKey=Parm1,ParameterValue=test1 ParameterKey=Parm2,ParameterValue=test2
+
+# Delete stack command
+4- aws cloudformation delete-stack --stack-name myteststack
+
+# Force delete stack
+4- aws cloudformation delete-stack --stack-name myteststack \
+    --deletion-mode FORCE_DELETE_STACK
+
+    

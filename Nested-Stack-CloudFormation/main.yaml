@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  vpcstack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: 'https://aqeel-cfn-bucket.s3.us-west-1.amazonaws.com/vpc.yaml'  
+
+
+  ec2stack:
+    Type: 'AWS::CloudFormation::Stack'
+    DependsOn: [vpcstack, rdsstack]
+    Properties:
+      TemplateURL: 'https://aqeel-cfn-bucket.s3.us-west-1.amazonaws.com/EC2.yaml'
+      Parameters:
+        VpcId: !GetAtt vpcstack.Outputs.VpcId
+        PublicSubnet1Id: !GetAtt vpcstack.Outputs.PublicSubnet1Id
+        PublicSubnet2Id: !GetAtt vpcstack.Outputs.PublicSubnet2Id
+        DBEndpoint: !GetAtt rdsstack.Outputs.DataBaseInstanceEndpoint
+        DatabaseName: wordpressdb
+        DatabaseUser: admin
+        DatabasePassword: password
+
+ 
+  rdsstack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: vpcstack
+    Properties:
+      TemplateURL: 'https://aqeel-cfn-bucket.s3.us-west-1.amazonaws.com/rds.yaml'
+      Parameters:
+        VpcId: !GetAtt vpcstack.Outputs.VpcId
+        PrivateSubnet1Id: !GetAtt vpcstack.Outputs.PrivateSubnet1Id
+        PrivateSubnet2Id: !GetAtt vpcstack.Outputs.PrivateSubnet2Id
+
+  ALBAndASGStack:
+    Type: 'AWS::CloudFormation::Stack'
+    DependsOn: [vpcstack, rdsstack, ec2stack]
+    Properties:
+      TemplateURL: 'https://aqeel-cfn-bucket.s3.us-west-1.amazonaws.com/alb-asg.yaml'
+      Parameters:
+        VpcId: !GetAtt vpcstack.Outputs.VpcId
+        PublicSubnet1Id: !GetAtt vpcstack.Outputs.PublicSubnet1Id
+        PublicSubnet2Id: !GetAtt vpcstack.Outputs.PublicSubnet2Id
+        DBEndpoint: !GetAtt rdsstack.Outputs.DataBaseInstanceEndpoint
+        EC2Instance1Id: !GetAtt ec2stack.Outputs.EC2Instance1Id
+        EC2Instance2Id: !GetAtt ec2stack.Outputs.EC2Instance2Id
+        MySecurityGroupId: !GetAtt ec2stack.Outputs.MySecurityGroupId
+        DatabaseName: wordpressdb
+        DatabaseUser: admin
+        DatabasePassword: password
