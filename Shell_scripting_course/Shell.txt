@@ -1,0 +1,19 @@
+What is shell?
+A shell is an interface for users to interact with the operating system (OS), 
+serving as the bridge between a user and the system's kernel.
+
+What is shell scripting?
+Shell scripting is when you write a series of command line instructions within
+a plain text script file. When you run this script file, 
+it lets the shell execute the commands sequentially, automating tasks 
+that would otherwise be executed one by one.
+
+How many types of shell?
+bash shell
+kshell
+zshell
+cshell
+Tshell
+
+
+

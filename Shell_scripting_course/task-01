@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+read -p "which server do you want to ping ?" server_addrress
+
+ping -c3 -w5 $server_addrress  #c for count for 3 second and w for wait for 5 second

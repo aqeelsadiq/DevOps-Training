@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#connecting remote machine with SSH  using bash script
+read -p "enter the username" username
+read -p "enter the  ip" ip
+
+ssh $username@$ip
