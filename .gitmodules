@@ -1,0 +1,3 @@
+[submodule "Cloudformation_course"]
+	path = Cloudformation_course
+	url = https://github.com/aqeelsadiq/DevOps-Training.git
