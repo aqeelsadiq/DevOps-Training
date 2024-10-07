@@ -17,7 +17,7 @@ resource "aws_lb_target_group" "TG" {
   health_check {
     enabled             = true
     interval            = 300
-    path                = "/"
+    path                = "/wp-admin/install.php"
     timeout             = 60
     matcher             = 200
     healthy_threshold   = 2

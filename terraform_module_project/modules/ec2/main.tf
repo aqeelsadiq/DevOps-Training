@@ -13,6 +13,7 @@ resource "aws_instance" "webserver" {
     subnet_id = var.pub_subnet[count.index]
     key_name = aws_key_pair.mykey-tf.key_name
     associate_public_ip_address = true
+    iam_instance_profile = aws_iam_instance_profile.ssm_instance_profile.name
 
     tags = {
       Name = "${var.resource_name}-webserver"
@@ -37,6 +38,10 @@ resource "aws_launch_template" "template" {
   instance_type = var.instance_type
   key_name      = var.key_name
   user_data     = filebase64("${path.module}/user_data.sh")
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ssm_instance_profile.name
+  }
 
   network_interfaces {
     associate_public_ip_address = true
