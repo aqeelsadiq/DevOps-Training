@@ -22,6 +22,12 @@ output "instance_id" {
 output "load_balancer_arn" {
   value = module.alb.load_balancer_arn
 }
-
+output "rds_endpoint" {
+  value = module.rds.rds_endpoint
+}
+output "load_balancer_dns" {
+  value = module.alb.load_balancer_dns
+  
+}
 
 
