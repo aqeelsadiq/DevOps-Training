@@ -9,3 +9,7 @@ output "instance_id" {
 output "aws_launch_template" {
   value = aws_launch_template.template.id
 }
+
+output "instance_profile_name" {
+  value = aws_iam_instance_profile.ssm_instance_profile.name
+}

@@ -34,6 +34,7 @@ module "ec2" {
   key_name          = var.key_name
   pub_subnet        = module.vpc.pub_subnet
   target_group_arn  = module.alb.target_group_arn
+  rds_endpoint = module.rds.rds_endpoint
 }
 
 
@@ -64,10 +65,25 @@ module "asg" {
   key_name          = var.key_name
   target_group_arn  = module.alb.target_group_arn
   aws_launch_template = module.ec2.aws_launch_template
+  instance_profile_name = module.ec2.instance_profile_name
 }
 
 
+#####################################
+# RDS Instance
+#####################################
 
+module "rds" {
+  source            = "./modules/rds"
+  db_name           = var.db_name
+  db_password       = var.db_password
+  db_username       = var.db_username
+  resource_name     = var.resource_name
+  security_group_id = module.sg.rds_sg_id
+  pri_subnet        = module.vpc.pri_subnet
+  instance_class    = var.instance_class
+
+}
 
 
 

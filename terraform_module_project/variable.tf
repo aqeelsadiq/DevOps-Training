@@ -11,3 +11,7 @@ variable "ec2_ami" {}
 variable "instance_type" {}
 variable "key_name" {}
 
+variable "db_name" {}
+variable "db_username" {}
+variable "db_password" {}
+variable "instance_class" {}

@@ -1,9 +1,13 @@
 aws_region    = "us-west-1"
 resource_name = "demo-aqeel"
 vpc_cidr      = "10.0.0.0/16"
-ec2_ami       = "ami-0d53d72369335a9d6"
+ec2_ami       = "ami-0d5"
 instance_type = "t2.micro"
 key_name      = "mykeyaqeel-tf"
+instance_class = "db.t3.micro"
+db_name        = ""
+db_password    = ""
+db_username    = ""
 pub_subnet = [
   {
     name              = "demo-aqeel-Public-Subnet-1"
