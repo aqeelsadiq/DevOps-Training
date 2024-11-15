@@ -18,3 +18,18 @@ CREATE USER wordpress@localhost IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 \q
 # now run the ip address and see it is working or not. 
+
+
+
+just install wordpress without connecting database use below
+
+#!/bin/bash
+sudo apt update -y
+sudo apt install apache2 php php-mysqli wget unzip -y
+sudo systemctl enable apache2
+sudo wget https://wordpress.org/latest.zip
+sudo unzip latest.zip
+sudo cp -r wordpress/* /var/www/html/
+cd /var/www/html
+sudo chown www-data:www-data -R /var/www/html/
+sudo systemctl restart apache2
